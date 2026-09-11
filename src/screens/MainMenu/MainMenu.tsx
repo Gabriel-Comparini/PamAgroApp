@@ -28,7 +28,7 @@ const MainMenu = () => {
                     </View>
                 </Pressable>
 
-                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("")}>
+                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("LocationScreen")}>
                     <View style={ [styles.itemPfpContainer, { backgroundColor: "#92ca63" }] }>
                         <MapPin color={"#fff"} size={60} />
                     </View>
@@ -42,7 +42,7 @@ const MainMenu = () => {
                     </View>
                 </Pressable>
 
-                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("")}>
+                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("GalleryScreen")}>
                     <View style={ [styles.itemPfpContainer, { backgroundColor: "#b68ad3" }] }>
                         <Camera color={"#fff"} size={60} />
                     </View>
@@ -56,7 +56,7 @@ const MainMenu = () => {
                     </View>
                 </Pressable>
 
-                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("")}>
+                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("SensorScreen")}>
                     <View style={ [styles.itemPfpContainer, { backgroundColor: "#e0bc58" }] }>
                         <Vibrate color={"#fff"} size={60} />
                     </View>

@@ -1,14 +1,21 @@
-import { Pressable, Text, View, Alert, FlatList } from "react-native";
+import { Text, View, Alert, FlatList, TextInput } from "react-native";
 import ContentBody from "../../components/ContentBody/ContentBody";
 import { styles } from "./styles";
 import { Contact, ContactField, requestPermissionsAsync } from "expo-contacts";
 import { useEffect, useState } from "react";
-import { Mail, Phone } from "lucide-react-native";
+import { Contact as ContactIcon, Mail, Phone } from "lucide-react-native";
 
 type ContactData = Awaited<ReturnType<typeof Contact.getAllDetails>>[number];
 
+const getDisplayName = (item: ContactData) => {
+    return (item as any).fullName || `${(item as any).givenName ?? ""} ${(item as any).familyName ?? ""}`.trim() || "Sem nome";
+};
+
+
 const ContactScreen = () => {
-    const [contacts, setContacts] = useState<ContactData[]>();
+    const [contacts, setContacts] = useState<ContactData[]>([]);
+    const [search, setSearch] = useState("");
+    const [visibleCount, setVisibleCount] = useState(10);
 
     const loadContacts = async () => {
         const { status } = await requestPermissionsAsync();
@@ -33,28 +40,39 @@ const ContactScreen = () => {
         }
     }
 
+    const filtered = contacts.filter((item) =>
+        getDisplayName(item).toLowerCase().includes(search.toLowerCase())
+    );
+
+    const visible = filtered.slice(0, visibleCount);
+
     const renderItem = ({ item }: { item: ContactData }) => {
-        const displayName = (item as any).fullName || `${(item as any).givenName ?? ""} ${(item as any).familyName ?? ""}`.trim() || "Sem nome";
+        const displayName = getDisplayName(item);
         const phones = (item as any).phones as { id: string; number?: string; label?: string }[] | undefined;
         const emails = (item as any).emails as { id: string; address?: string; label?: string }[] | undefined;
 
         return (
-            <View style={ "" }>
-                <Text style={ "" }>
-                    {displayName}
-                </Text>
-
-                {phones && phones.map((phone, index) => (
-                    <Text key={phone.id ?? String(index)} style={ "" }>
-                        <Phone /> {phone.number}
+            <View style={ styles.itemContainer }>
+                <View style={ styles.itemPfpContainer }>
+                    <ContactIcon color={"#fff"} size={60} />
+                </View>
+                <View style={ styles.itemTextContainer }>
+                    <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                        {displayName}
                     </Text>
-                ))}
 
-                {emails && emails.map((email, index) => (
-                    <Text key={email.id ?? String(index)} style={ "" }>
-                        <Mail /> {email.address}
-                    </Text>
-                ))}
+                    {phones && phones.map((phone, index) => (
+                        <Text key={phone.id ?? String(index)}>
+                            <Phone /> {phone.number}
+                        </Text>
+                    ))}
+
+                    {emails && emails.map((email, index) => (
+                        <Text key={email.id ?? String(index)}>
+                            <Mail /> {email.address}
+                        </Text>
+                    ))}
+                </View>
             </View>
         );
     };
@@ -66,11 +84,32 @@ const ContactScreen = () => {
     return(
         <ContentBody>
             <View style={ styles.container }>
+                <Text style={{ fontSize: 25, fontWeight:"bold", color: "#4d4c4c", marginBottom: 10 }}>
+                    Contatos
+                </Text>
+
+                <TextInput
+                    style={ styles.searchInput }
+                    placeholder="Buscar por nome..."
+                    value={search}
+                    onChangeText={(text) => {
+                        setSearch(text);
+                        setVisibleCount(10);
+                    }}
+                />
+
                 <FlatList
-                    data={contacts}
+                    data={visible}
                     keyExtractor={(item) => item.id}
                     renderItem={renderItem}
-                    contentContainerStyle={""}
+                    style={ styles.list }
+                    contentContainerStyle={ styles.listContent }
+                    onEndReached={() => {
+                        if (visibleCount < filtered.length) {
+                            setVisibleCount((prev) => prev + 10);
+                        }
+                    }}
+                    onEndReachedThreshold={0.5}
                 />
             </View>
         </ContentBody>

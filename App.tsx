@@ -5,6 +5,7 @@ import ContactScreen from "./src/screens/ContactScreen/ContactScreen";
 import LocationScreen from "./src/screens/LocationScreen/LocationScreen";
 import GalleryScreen from "./src/screens/GalleryScreen/GalleryScreen";
 import FormScreen from "./src/screens/FormScreen/FormScreen";
+import SensorScreen from "./src/screens/SensorScreen/SensorScreen";
 
 
 const RS = createNativeStackNavigator({
@@ -23,6 +24,10 @@ const RS = createNativeStackNavigator({
 
         GalleryScreen: {
             screen: GalleryScreen
+        },
+
+        SensorScreen: {
+            screen: SensorScreen
         },
 
         FormScreen: {
