@@ -70,7 +70,7 @@ const MainMenu = () => {
                     </View>
                 </Pressable>
 
-                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("")}>
+                <Pressable style={ styles.itemContainer } onPress={() => Navigation.navigate("FormScreen")}>
                     <View style={ [styles.itemPfpContainer, { backgroundColor: "#e27831" }] }>
                         <Book color={"#fff"} size={60} />
                     </View>
